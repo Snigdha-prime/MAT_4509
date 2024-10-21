@@ -1,20 +1,24 @@
-#Snigdha Das(ID-22024012)
+# Snigdha Das(ID_22024012)
 library(readxl)
 
-setwd("F:/Rstudio codes")
+setwd("F:/Rstudio codes/MAT_4509")
+#variable with my ID
+id<-12
 
 # load dataset
-
 xl_data <- read_excel("United Airlines Aircraft Operating Statistics- Cost Per Block Hour (Unadjusted).xls", range = "b2:w158")
 
-# Helper function to extract salary data by row
-get_salary_wages <- function(row_num, data = xl_data) {
-  return(na.omit(as.numeric(data[row_num, -1])))
+# creating function to salarys and wages data by row
+#took the same number of data input as my id's last two digits.
+get_salary_wages <- function(row_num, data = xl_data){
+  return((as.numeric(data[row_num, 1:id+1])))
 }
 
+
+
 # Extract salary and wages data for different fleets
-salary_wages_snbodies <- get_salary_wages(6)
-salary_wages_lnbodies <- get_salary_wages(45)
+salary_wages_snbodies <- get_salary_wages(6)  
+salary_wages_lnbodies <- get_salary_wages(45) 
 salary_wages_wbodies <- get_salary_wages(84)
 salary_wages_tfleet <- get_salary_wages(123)
 
@@ -42,7 +46,7 @@ get_frequency_distribution <- function(
     }
   }
   
-  # calculate class interval ( interval >= (max - min)/k)
+  # calculating class interval ( interval >= (max - min)/k)
   min_salary <- min(wage_data)
   max_salary <- max(wage_data)
   class_interval <- (max_salary - min_salary) / k
@@ -50,14 +54,14 @@ get_frequency_distribution <- function(
   
   
   
-  # Create breakpoints
+  # Creating breakpoints
   break_points <- seq(
     min_salary - (class_interval / 2),
     max_salary + (class_interval / 2),
     by = class_interval
   )
   
-  # Create frequency distribution
+  # Creating frequency distribution
   salary_bins <- cut(wage_data, breaks = break_points, right = TRUE)
   frequency_distribution <- table(salary_bins)
   
@@ -92,21 +96,22 @@ print_analysis <- function(wage_data, title) {
   cat("Range:", range, "\n")
   cat("\n\n")
 }
-set_window_size <- function() {
-  windows(width = 1920 / 100, height = 1080 / 100)
+ set_window_size <- function() {
+  windows(width = 1800 / 100, height = 1080 / 100)
 }
 
-plot_histogram <- function(frequency_distribution, title) {
+plot_histogram <- function(frequency_distribution, title,xlim,ylim) {
   set_window_size()
   barplot(frequency_distribution,
           main = title,
           xlab = "Salary Ranges",
           ylab = "Frequency",
-          col = "lightblue",
+          col = "gray",
           border = "black",
-          space = 0, # No space between bars
+          space = 0.5, # No space between bars
           width = 1 # Adjust width to fill the space better
   )
+  
 }
 
 # get frequency distribution (i)
@@ -115,11 +120,21 @@ lbodies_fdistribution <- get_frequency_distribution(salary_wages_lnbodies)
 wbodies_fdisgribution <- get_frequency_distribution(salary_wages_wbodies)
 tfleet_fdistribution <- get_frequency_distribution(salary_wages_tfleet)
 
+# print Frequency Distribution
+cat("Frequency Distribution for Small Narrowbodies:\n")
+print(snbodies_fdistribution)
+cat("\nFrequency Distribution for Large Narrowbodies:\n")
+print(lbodies_fdistribution)
+cat("\nFrequency Distribution for Widebodies:\n")
+print(wbodies_fdisgribution)
+cat("\nFrequency Distribution for Total Fleet:\n")
+print(tfleet_fdistribution)
+
 # print analysis (ii)
 print_analysis(salary_wages_snbodies, "salary wages of small narrowbodies")
 print_analysis(salary_wages_lnbodies, "salary wages of large narrowbodies")
 print_analysis(salary_wages_wbodies, "salary wages of widebodies")
-print_analysis(salary_wages_tfleet, "salary wages of total fleet")
+print_analysis(salary_wages_tfleet, "salary wages of total fleet")s
 
 # histogram using i. (iii)
 plot_histogram(snbodies_fdistribution, "salary wages of small narrowbodies")
