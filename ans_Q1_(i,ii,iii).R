@@ -1,5 +1,7 @@
 # Snigdha Das(ID_22024012)
-# Changes should be made to the working directory for using it in other PC. 
+# Changes should be made to the working directory for using it in other PC.
+rm(list = ls())# to clear the environment.
+
 library(readxl)
 
 
@@ -66,7 +68,7 @@ make_Freq_Dis <- function(
   # Creating frequency distribution
   salary_bins <- cut(wage_data, breaks = break_points, right = TRUE)
   frequency_distribution <- table(salary_bins)
-  
+  #cut() function is used to divide a numeric vector into different ranges.
   return(frequency_distribution)
 }
 print_analysis <- function(wage_data, title) {
@@ -81,7 +83,8 @@ print_analysis <- function(wage_data, title) {
   range <- max(wage_data) - min(wage_data)
   
   # print results
-  cat("Analysis of ", title, "::\n")
+      # Here,I used cat() to concatenate and print strings and values from the variable together.
+  cat("Analysis of ", title, ":\n")
   cat("Mean:", mean, "\n")
   cat("Median:", median, "\n")
   if (is.null(modes) || length(modes) == 0) {
@@ -98,7 +101,7 @@ print_analysis <- function(wage_data, title) {
   cat("Range:", range, "\n")
   cat("\n\n")
 }
- set_window_size <- function() {
+set_window_size <- function() {
   windows(width = 1800 / 100, height = 1080 / 100)
 }
 
@@ -108,7 +111,7 @@ plot_histogram <- function(frequency_distribution, title,xlim,ylim) {
           main = title,
           xlab = "Salary Ranges",
           ylab = "Frequency",
-          col = "gray",
+          col = "steelblue",
           border = "black",
           space = 0.5, # No space between bars
           width = 1 # Adjust width to fill the space better
