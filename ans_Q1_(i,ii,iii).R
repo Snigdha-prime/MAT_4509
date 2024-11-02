@@ -1,5 +1,7 @@
 # Snigdha Das(ID_22024012)
+# Changes should be made to the working directory for using it in other PC. 
 library(readxl)
+
 
 setwd("F:/Rstudio codes/MAT_4509")
 #variable with my ID
@@ -32,7 +34,7 @@ get_modes <- function(data) {
   }
   return(modes)
 }
-get_frequency_distribution <- function(
+make_Freq_Dis <- function(
     wage_data) {
   # number of observations
   n <- length(wage_data)
@@ -115,29 +117,29 @@ plot_histogram <- function(frequency_distribution, title,xlim,ylim) {
 }
 
 # get frequency distribution (i)
-snbodies_fdistribution <- get_frequency_distribution(salary_wages_snbodies)
-lbodies_fdistribution <- get_frequency_distribution(salary_wages_lnbodies)
-wbodies_fdisgribution <- get_frequency_distribution(salary_wages_wbodies)
-tfleet_fdistribution <- get_frequency_distribution(salary_wages_tfleet)
+SN_freq_dis <- make_Freq_Dis(salary_wages_snbodies)
+LN_freq_dis <- make_Freq_Dis(salary_wages_lnbodies)
+WB_freq_dis <- make_Freq_Dis(salary_wages_wbodies)
+TO_freq_dis <- make_Freq_Dis(salary_wages_tfleet)
 
 # print Frequency Distribution
 cat("Frequency Distribution for Small Narrowbodies:\n")
-print(snbodies_fdistribution)
+print(SN_freq_dis)
 cat("\nFrequency Distribution for Large Narrowbodies:\n")
-print(lbodies_fdistribution)
+print(LN_freq_dis)
 cat("\nFrequency Distribution for Widebodies:\n")
-print(wbodies_fdisgribution)
+print(WB_freq_dis)
 cat("\nFrequency Distribution for Total Fleet:\n")
-print(tfleet_fdistribution)
+print(TO_freq_dis)
 
 # print analysis (ii)
 print_analysis(salary_wages_snbodies, "salary wages of small narrowbodies")
 print_analysis(salary_wages_lnbodies, "salary wages of large narrowbodies")
 print_analysis(salary_wages_wbodies, "salary wages of widebodies")
-print_analysis(salary_wages_tfleet, "salary wages of total fleet")s
+print_analysis(salary_wages_tfleet, "salary wages of total fleet")
 
 # histogram using i. (iii)
-plot_histogram(snbodies_fdistribution, "salary wages of small narrowbodies")
-plot_histogram(lbodies_fdistribution, "salary wages of large narrowbodies")
-plot_histogram(wbodies_fdisgribution, "salary wages of widebodies")
-plot_histogram(tfleet_fdistribution, "salary wages of total fleet")
+plot_histogram(SN_freq_dis, "salary wages of small narrowbodies")
+plot_histogram(LN_freq_dis, "salary wages of large narrowbodies")
+plot_histogram(WB_freq_dis, "salary wages of widebodies")
+plot_histogram(TO_freq_dis, "salary wages of total fleet")
