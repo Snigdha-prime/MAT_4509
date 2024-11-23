@@ -1,16 +1,18 @@
-rm(list = ls())# to clear the environment.
+# Snigdha Das(ID_22024012)
+# Changes should be made to the working directory for using it in other PC. 
+rm(list = ls()) # Clear the environment
+graphics.off()  # Close all open graphics windows
+
 library(readxl)
+library(graphics)
 
-library(rstudioapi)
+# Load dataset
+xl_data <- read_excel("United Airlines Aircraft Operating Statistics- Cost Per Block Hour (Unadjusted).xls", range = "b2:w158")
 
-# Set working directory and load data
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+# Variable with my ID
+id <- 12  # This should be set based on your specific requirements
 
-# load dataset
-data_file <- "United Airlines Aircraft Operating Statistics- Cost Per Block Hour (Unadjusted).xlsx"
-all_data <- read_excel(data_file, range = "b2:w158")
-
-# define categories
+# Define categories
 daily_utilization_categories <- c("Block hours", "Airborne hours", "Departures")
 ownership_categories <- c("Rental", "Depreciation and Amortization")
 purchased_goods_categories <- c("Fuel/Oil", "Insurance", "Other (inc. Tax)")
@@ -21,13 +23,13 @@ fleet_category <- c(
   "total fleet"
 )
 
-# row numbers
+# Row numbers for each category
 purchased_goods_rows <- c(16, 55, 94, 133) - 5
 ownership_rows <- purchased_goods_rows + 12
 daily_utilization_rows <- ownership_rows + 13
 
 get_data_by_row <- function(row_num) {
-  return(na.omit(as.numeric(all_data[row_num, -1])))
+  return((as.numeric(xl_data[row_num, 1:(id) + 1])))  # Using 'id' to select number of values
 }
 
 get_category_data <- function(row_num, categories) {
@@ -40,53 +42,42 @@ get_category_data <- function(row_num, categories) {
   return(data.frame(costs = costs, category = category))
 }
 
-box_plot <- function(data, title1, title2, ylab) {
-  file_name <- paste0(
-    "report/images/",
-    gsub(" ", "_", title1),
-    "_",
-    gsub(" ", "_", title2),
-    ".png"
-  )
-  png(file_name, width = 500, height = 400)
+# Function to create box plots
+box_plot <- function(data, title, ylab) {
   boxplot(costs ~ category,
           data = data,
           col = "lightblue",
           ylab = ylab,
+          main = title,
           border = "black"
   )
-  dev.off()
 }
 
-plot_category <- function(rows, categories, title, ylab) {
-  # Create the box plot using the formula interface
-  lapply(
-    seq_along(rows),
-    function(i) {
-      box_plot(
-        get_category_data(rows[i], categories),
-        title,
-        fleet_category[i], ylab
-      )
-    }
+# Plot all box plots for each fleet category in separate windows
+for (i in 1:4) {
+  windows(width = 15, height = 10)  # Open a new window with increased dimensions
+  
+  # Set up layout for 3 rows (1 for each category)
+  par(mfrow = c(3, 1))  # 3 rows, 1 column
+  
+  # Plot Purchased Goods
+  box_plot(
+    get_category_data(purchased_goods_rows[i], purchased_goods_categories),
+    paste("Purchased Goods for", fleet_category[i]),
+    "Cost ($)"
+  )
+  
+  # Plot Aircraft Ownership
+  box_plot(
+    get_category_data(ownership_rows[i], ownership_categories),
+    paste("Aircraft Ownership for", fleet_category[i]),
+    "Cost ($)"
+  )
+  
+  # Plot Daily Utilization
+  box_plot(
+    get_category_data(daily_utilization_rows[i], daily_utilization_categories),
+    paste("Daily Utilization for", fleet_category[i]),
+    "Hours"
   )
 }
-
-plot_category(
-  purchased_goods_rows,
-  purchased_goods_categories,
-  "Purchased Goods",
-  "Cost ($)"
-)
-plot_category(
-  ownership_rows,
-  ownership_categories,
-  "Aircraft Ownership",
-  "Cost ($)"
-)
-plot_category(
-  daily_utilization_rows,
-  daily_utilization_categories,
-  "Daily Utilization",
-  "Hours"
-)
